@@ -1,4 +1,6 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 
 const asyncHandler = require('../utils/async_handler');
 const {PrismaClient} = require('@prisma/client');
@@ -23,7 +25,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   const isPasswordSame = await bcrypt.compare(password, user.password);
 
   if (!isPasswordSame) return next(new Exception('Password does not match', 401));
-  
+
   user.otp = undefined;
   user.otpExpireAt = undefined;
   user.password = undefined;
@@ -56,7 +58,11 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   user.password = undefined;
   user.passwordChangedAt = undefined;
 
-  res.status(201).json({
+  user.token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN});
+
+  res.status(201).cookies({
+    token: user.token
+  }).json({
     status: true,
     message: 'Account Created Successfully',
     body: user,
