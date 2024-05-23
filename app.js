@@ -10,7 +10,6 @@ const globalErrorHandler = require('./utils/global_error_handler');
 const utils = require('./utils');
 
 const routes = require('./routes');
-const Exception = require('./utils/exception');
 
 const app = express();
 
@@ -36,6 +35,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server Started at PORT: ${PORT}`);
 });
+
 
 // app.route('*', (req, res, next) => {
 //   next(new Exception('Invalid Route Found', 404));
