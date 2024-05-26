@@ -3,7 +3,9 @@ const Exception = require('./exception');
 module.exports = (err, req, res, next) => {
   console.error('Global Error Handler!');
 
-  if (process.env.ENVIRONMENT === 'development') console.error(err);
+  const env = process.env.NODE_ENV || 'development';
+
+  if (env === 'development' && !err.isOperational) console.error(err);
 
   err = handleError(err);
 

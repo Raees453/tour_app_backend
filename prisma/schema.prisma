@@ -14,6 +14,9 @@ model User {
   firstName         String
   lastName          String
   role              String
+  profile           String?
+  bio               String?
+  description       String?
   password          String
   passwordChangedAt DateTime?
   otp               String?
@@ -24,10 +27,9 @@ model User {
 }
 
 model TourGuide {
-  id          Int     @id @default(autoincrement())
-  images      Json?
-  bio         String?
-  description String?
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id])
+  id     Int      @id @default(autoincrement())
+  images String[] @default([])
+  city   String?
+  userId Int
+  user   User     @relation(fields: [userId], references: [id])
 }

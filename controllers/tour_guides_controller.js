@@ -12,20 +12,36 @@ const prisma = new PrismaClient();
 
 exports.getTourGuides = asyncHandler(async (req, res, next) => {
 
-  const tourGuides = await prisma.user.findMany({
-    where: { role: 'tour-guide' }, select: {
-      id: true,
-      email: true,
-      phone: true,
-      firstName: true,
-      lastName: true,
-      createdAt: true,
-    },
+  let tourGuides = await prisma.user.findMany({
+    where: { role: process.env.TOUR_GUIDE },
+  });
+
+  tourGuides.forEach((e) => {
+    e.password = undefined;
+    e.passwordChangedAt = undefined;
   });
 
   res.status(200).json({
     success: true,
     body: tourGuides,
+  });
+
+  next();
+});
+
+exports.getTourGuideById = asyncHandler(async (req, res, next) => {
+  const { id } = req.body;
+
+  if (!id) return next(new Exception('Please provide id', 400));
+
+  const tourGuide = await prisma.user.findUnique({
+    where: { id },
+    include: { TourGuide: true },
+  });
+
+  res.status(200).json({
+    status: true,
+    data: tourGuide,
   });
 
   next();

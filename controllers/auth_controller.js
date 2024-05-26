@@ -10,7 +10,6 @@ const util = require('util');
 
 const prisma = new PrismaClient();
 
-// first, last, phone, email, role, password
 exports.login = asyncHandler(async (req, res, next) => {
 
   const { email, password, role } = req.body;
@@ -49,13 +48,15 @@ exports.signUp = asyncHandler(async (req, res, next) => {
 
   password = await bcrypt.hash(password, 10);
 
+  role = role.toLowerCase();
+
   const user = await prisma.user.create({
-    data: { email, password, role, firstName, lastName, phone },
+    data: { email, phone, firstName, lastName, role, password },
   });
 
   if (role === 'tour-guide') {
     await prisma.tourGuide.create({
-      data: {userId: user.id , id: user.id }
+      data: { userId: user.id, id: user.id },
     });
   }
 
