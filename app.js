@@ -1,5 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
+const cors = require('cors');
 
 const sanitize = require('sanitize');
 const morgan = require('morgan');
@@ -12,6 +13,8 @@ const utils = require('./utils');
 const routes = require('./routes');
 
 const app = express();
+
+app.use(cors());
 
 app.use(morgan('dev'));
 app.use(sanitize.middleware);

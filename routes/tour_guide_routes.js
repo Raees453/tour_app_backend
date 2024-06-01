@@ -12,6 +12,6 @@ router.route('/').get(tourGuidesController.getTourGuides);
 
 router.route('/profile')
   .patch(authController.authorise, upload.array('images', 5), tourGuidesController.updateTourGuide)
-  .get(tourGuidesController.getTourGuideById);
+  .post(tourGuidesController.getTourGuideById);
 
 module.exports = router;

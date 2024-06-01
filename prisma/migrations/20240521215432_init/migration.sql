@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "TourGuide" ALTER COLUMN "images" DROP NOT NULL,
-ALTER COLUMN "bio" DROP NOT NULL,
-ALTER COLUMN "description" DROP NOT NULL;

@@ -14,6 +14,7 @@ exports.getTourGuides = asyncHandler(async (req, res, next) => {
 
   let tourGuides = await prisma.user.findMany({
     where: { role: process.env.TOUR_GUIDE },
+    include: {TourGuide: true}
   });
 
   tourGuides.forEach((e) => {
