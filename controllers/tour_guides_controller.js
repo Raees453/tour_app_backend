@@ -40,6 +40,11 @@ exports.getTourGuideById = asyncHandler(async (req, res, next) => {
     include: { TourGuide: true },
   });
 
+  tourGuide.password = undefined;
+  tourGuide.passwordChangedAt = undefined;
+  tourGuide.otp = undefined;
+  tourGuide.otpExpireAt = undefined;
+
   res.status(200).json({
     status: true,
     data: tourGuide,
@@ -50,26 +55,21 @@ exports.getTourGuideById = asyncHandler(async (req, res, next) => {
 
 exports.updateTourGuide = asyncHandler(async (req, res, next) => {
 
-  let { user, files } = req;
-  const { bio, description } = req.body;
+  let { user } = req;
+  const { bio, description, portfolio, firstName, lastName, city, profile } = req.body;
 
   let tourGuide = await prisma.tourGuide.findFirst({ where: { userId: user.id } });
 
   if (!tourGuide) return next(new Exception('No Tour Guide Found', 404));
 
-  const uploadedFiles = [];
-
-  for (const file of files) {
-    const ext = path.extname(file.originalname); // Extract extension
-    const fileName = `File-${file.originalname.slice(0, -ext.length)}${ext}`;
-    const filePath = path.join(`${__dirname}/${file.destination}`, fileName);
-
-    uploadedFiles.push(filePath);
-  }
-
   await prisma.tourGuide.update({
-    where: { id: tourGuide.id }, data: { bio, description, images: JSON.stringify(uploadedFiles) },
+    where: { id: user.id }, data: { images: [], city },
   });
+
+  await prisma.user.update({
+    where: { id: user.id }, data: { bio, description, firstName, lastName, profile },
+  });
+
 
   user = await prisma.user.findUnique({
     where: { id: user.id }, include: {
@@ -77,8 +77,10 @@ exports.updateTourGuide = asyncHandler(async (req, res, next) => {
     },
   });
 
-  user.portfolio = user.TourGuide[0];
-  user.TourGuide = undefined;
+  user.password = undefined;
+  user.passwordChangedAt = undefined;
+  user.otp = undefined;
+  user.otpExpireAt = undefined;
 
   res.status(200).json({
     status: true,

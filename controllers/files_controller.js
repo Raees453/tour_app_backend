@@ -6,6 +6,8 @@ exports.uploadFiles = asyncHandler(async (req, res, next) => {
 
   const paths = [];
 
+  console.log('Files', req.files);
+
   for (const file of req.files) {
 
     console.log(file.path);

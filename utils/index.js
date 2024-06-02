@@ -5,11 +5,9 @@ exports.disconnectFromPrismaOnShutdown = async function() {
 
   try {
 
-    if (process.env.NODE_ENV === 'development') {
-      // await prisma.tourGuide.deleteMany();
-      // await prisma.user.deleteMany();
-    }
-    
+    // await prisma.tourGuide.deleteMany();
+    // await prisma.user.deleteMany();
+
     await prisma.$disconnect();
     console.log('Disconnected from Prisma.');
   } catch (error) {
